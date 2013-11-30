@@ -24,7 +24,7 @@ INSTALLED_APPS += (
 And add in your AWS details
 
 ```python
-AWS_ACCESS_KEY = '...'
+AWS_ACCESS_KEY_ID = '...'
 AWS_SECRET_ACCESS_KEY = '...'
 REMOTE_FIXTURE_BUCKET = 'myproject_fixtures'
 ```
