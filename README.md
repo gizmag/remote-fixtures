@@ -7,13 +7,13 @@ in on the other end.
 
 ## Setup
 
-First, install this library with pip
+First, install this library with `pip`
 
 ```bash
 pip install git+https://github.com/gizmag/remote-fixtures.git#egg=remote-fixtures
 ```
 
-Then, add the app to INSTALLED_APPS in your settings file
+Then, add the app to `INSTALLED_APPS` in your settings file
 
 ```python
 INSTALLED_APPS = (
@@ -37,7 +37,7 @@ the AWS control panel.
 
 ### `push_fixtures`
 
-This command is used to upload your fixtures to S3, it is used like
+This command is used to upload your fixtures to S3.
 
 ```bash
 # upload all fixtures
@@ -58,7 +58,7 @@ specify an exact fixture file to install.
 
 ### `pull_fixures`
 
-This command is used to pull fixtures from S3, then load them. By default it
+This command is used to pull fixtures from S3, and load them. By default it
 will load the last set of fixtures uploaded. You can also optionally specify a
 specific filename to be loaded.
 
