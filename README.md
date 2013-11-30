@@ -32,3 +32,26 @@ REMOTE_FIXTURE_BUCKET = 'myproject_fixtures'
 
 Note that the `REMOTE_FIXTURE_BUCKET` will need to be manually created through
 the AWS control panel.
+
+## Usage
+
+### `push_fixtures`
+
+This command is used to upload your fixtures to S3, it is used like
+
+```bash
+# upload all fixtures
+python manage.py push_fixtures
+
+# upload fixtures for a single app
+python manage.py push_fixtures users
+
+# upload fixtures for a single model
+python manage.py push_fixtures articles.Article
+
+# combine them together
+python manage.py push_fixtures articles.Article users
+```
+
+It will output the filename that was generated for the file. This can be used to
+specify an exact fixture file to install.
