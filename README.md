@@ -55,3 +55,17 @@ python manage.py push_fixtures articles.Article users
 
 It will output the filename that was generated for the file. This can be used to
 specify an exact fixture file to install.
+
+### `pull_fixures`
+
+This command is used to pull fixtures from S3, then load them. By default it
+will load the last set of fixtures uploaded. You can also optionally specify a
+specific filename to be loaded.
+
+```bash
+# download / load last set of fixtures
+python manage.py pull_fixtures
+
+# download a specific fixture file
+python manage.py pull_fixtures fixture_2013-11-30t050929030986.json
+```
