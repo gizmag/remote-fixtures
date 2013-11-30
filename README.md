@@ -62,6 +62,8 @@ This command is used to pull fixtures from S3, and load them. By default it
 will load the last set of fixtures uploaded. You can also optionally specify a
 specific filename to be loaded.
 
+Only files that begin with `fixture_` will be considered to be loaded.
+
 ```bash
 # download / load last set of fixtures
 python manage.py pull_fixtures
