@@ -10,7 +10,7 @@ in on the other end.
 First, install this library with `pip`
 
 ```bash
-pip install git+https://github.com/gizmag/remote-fixtures.git#egg=remote-fixtures
+pip install remote-fixtures
 ```
 
 Then, add the app to `INSTALLED_APPS` in your settings file
