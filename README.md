@@ -16,8 +16,7 @@ pip install git+https://github.com/gizmag/remote-fixtures.git#egg=remote-fixture
 Then, add the app to `INSTALLED_APPS` in your settings file
 
 ```python
-INSTALLED_APPS = (
-    ...
+INSTALLED_APPS += (
     'remote_fixtures',
 )
 ```
