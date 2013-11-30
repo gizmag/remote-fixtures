@@ -1,19 +1,12 @@
-from boto.s3.connection import S3Connection
 import dateutil.parser
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.conf import settings
 from tempfile import NamedTemporaryFile
 
+from remote_fixtures.utils import S3Mixin
 
-class Command(BaseCommand):
-    def get_bucket(self):
-        if not hasattr(self, 'bucket'):
-            conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            self.bucket = conn.get_bucket(settings.REMOTE_FIXTURE_BUCKET)
 
-        return self.bucket
-
+class Command(BaseCommand, S3Mixin):
     def get_latest_fixture_key(self):
         bucket = self.get_bucket()
         fixtures = bucket.list('fixture_')
