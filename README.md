@@ -78,9 +78,9 @@ To list off fixtures in your S3 bucket, simply run
 
 ```bash
 python manage.py list_fixtures
-fixture_2013-12-02t064449268866.json     17.4MB     02 Dec 2013      1 month ago
-fixture_2013-12-03t045828313027.json     23.6MB     03 Dec 2013      4 weeks, 1 day ago
-fixture_2013-12-03t064841764321.json     23.6MB     03 Dec 2013      4 weeks, 1 day ago
+fixture_2013-12-02t064449268866.json     17.4MB     02 Dec 2013     1 month ago
+fixture_2013-12-03t045828313027.json     23.6MB     03 Dec 2013     4 weeks, 1 day ago
+fixture_2013-12-03t064841764321.json     23.6MB     03 Dec 2013     4 weeks, 1 day ago
 fixture_2013-12-10t054540615336.json     23.9MB     10 Dec 2013     3 weeks, 1 day ago
 fixture_2013-12-11t022818593030.json     27.1MB     11 Dec 2013     3 weeks, 1 day ago
 fixture_2013-12-13t052205908111.json     24.1MB     13 Dec 2013     2 weeks, 5 days ago
