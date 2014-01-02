@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from datetime import datetime
 import dateutil.parser
+import json
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
@@ -24,10 +25,16 @@ class Command(BaseCommand, S3Mixin):
         bucket = self.get_bucket()
         key = bucket.new_key(filename)
         key.set_contents_from_file(file)
+        return key
 
     def handle(self, *args, **options):
         file = self.get_fixture_file(args)
         filename = self.get_file_name()
-        self.upload_file(file, filename)
+        key = self.upload_file(file, filename)
+        if len(args):
+            contents = json.dumps(args)
+        else:
+            contents = '["all"]'
+        key.set_metadata('x-amz-meta-contents', contents)
 
         print 'filename: %s' % filename
