@@ -10,5 +10,5 @@ setup(
     author_email='tech@gizmag.com',
     url='https://github.com/gizmag/remote-fixtures',
     packages=find_packages(),
-    install_requires=['django', 'boto', 'python-dateutil']
+    install_requires=['django', 'boto', 'python-dateutil', 'clint>=0.2.0']
 )
