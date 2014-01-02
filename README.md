@@ -70,3 +70,13 @@ python manage.py pull_fixtures
 # download a specific fixture file
 python manage.py pull_fixtures fixture_2013-11-30t050929030986.json
 ```
+
+### `list_fixtures`
+
+To list off fixtures in your S3 bucket, simply run
+`python manage.py list_fixtures`.
+
+```bash
+python manage.py list_fixtures
+
+```
