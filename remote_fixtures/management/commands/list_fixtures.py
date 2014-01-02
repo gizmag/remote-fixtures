@@ -22,6 +22,6 @@ class Command(BaseCommand, S3Mixin):
             print columns(
                 [fixture.name, 40],
                 [humanize_filesize(fixture.size), 10],
-                [fixture.last_modified_dt.strftime('%e %b %G'), 15],
+                [fixture.last_modified_dt.strftime('%d %b %G'), 15],
                 [naturaltime(fixture.last_modified_dt), 30],
             )
