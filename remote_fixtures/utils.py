@@ -10,11 +10,11 @@ class S3Mixin(object):
         return self.bucket
 
 
-def humanize_filesize(bytes):
+def humanize_filesize(byte_count):
     for x in [' bytes','KB','MB','GB']:
-        if bytes == 0:
+        if byte_count == 0:
             return '0 bytes'
-        if bytes < 1024.0 and bytes > -1024.0:
-            return "%3.1f%s" % (bytes, x)
-        bytes /= 1024.0
-    return "%3.1f%s" % (bytes, 'TB')
+        if byte_count < 1024.0 and byte_count > -1024.0:
+            return "%3.1f%s" % (byte_count, x)
+        byte_count /= 1024.0
+    return "%3.1f%s" % (byte_count, 'TB')
