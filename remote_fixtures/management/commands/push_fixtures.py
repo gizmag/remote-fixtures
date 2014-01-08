@@ -11,23 +11,23 @@ from remote_fixtures.utils import S3Mixin
 
 class Command(BaseCommand, S3Mixin):
     def get_fixture_file(self, dumpdata_args):
-        file = NamedTemporaryFile(suffix='.json')
-        data = call_command('dumpdata', *dumpdata_args, stdout=file)
-        file.seek(0)
-        return file
+        fixture_file = NamedTemporaryFile(suffix='.json')
+        call_command('dumpdata', *dumpdata_args, stdout=fixture_file)
+        fixture_file.seek(0)
+        return fixture_file
 
     def get_file_name(self):
         now = datetime.utcnow()
         return 'fixture_%s.json' % slugify(unicode(now.isoformat()))
 
-    def upload_file(self, file, filename):
+    def upload_file(self, fixture_file, filename):
         bucket = self.get_bucket()
         key = bucket.new_key(filename)
-        key.set_contents_from_file(file)
+        key.set_contents_from_file(fixture_file)
 
     def handle(self, *args, **options):
-        file = self.get_fixture_file(args)
+        fixture_file = self.get_fixture_file(args)
         filename = self.get_file_name()
-        self.upload_file(file, filename)
+        self.upload_file(fixture_file, filename)
 
         print 'filename: %s' % filename
