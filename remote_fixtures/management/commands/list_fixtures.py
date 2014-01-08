@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from datetime import datetime
 import dateutil.parser
 from django.core.management.base import BaseCommand
 from django.contrib.humanize.templatetags.humanize import naturaltime

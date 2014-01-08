@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 from datetime import datetime
-import dateutil.parser
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
