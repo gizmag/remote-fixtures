@@ -31,13 +31,13 @@ class Command(BaseCommand, S3Mixin):
         return key
 
     def get_file(self, key):
-        file = NamedTemporaryFile(suffix='fixture.json')
-        key.get_contents_to_file(file)
-        file.seek(0)
-        return file
+        fixture_file = NamedTemporaryFile(suffix='fixture.json')
+        key.get_contents_to_file(fixture_file)
+        fixture_file.seek(0)
+        return fixture_file
 
-    def load_fixture(self, file):
-        call_command('loaddata', file.name)
+    def load_fixture(self, fixture_file):
+        call_command('loaddata', fixture_file.name)
 
     def handle(self, *args, **options):
         if len(args) > 0:
@@ -48,7 +48,7 @@ class Command(BaseCommand, S3Mixin):
             fixture_key = self.get_latest_fixture_key()
 
         # download file
-        file = self.get_file(fixture_key)
+        fixture_file = self.get_file(fixture_key)
 
         # load it in
-        self.load_fixture(file)
+        self.load_fixture(fixture_file)
