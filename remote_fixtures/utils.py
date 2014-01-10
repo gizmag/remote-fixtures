@@ -11,10 +11,14 @@ class S3Mixin(object):
 
 
 def humanize_filesize(byte_count):
-    for x in [' bytes','KB','MB','GB']:
-        if byte_count == 0:
-            return '0 bytes'
-        if byte_count < 1024.0 and byte_count > -1024.0:
-            return "%3.1f%s" % (byte_count, x)
+    if byte_count < 1024:
+        if byte_count == 1:
+            return '1 byte'
+        return '{} bytes'.format(byte_count)
+    else:
         byte_count /= 1024.0
-    return "%3.1f%s" % (byte_count, 'TB')
+        for x in ['KB', 'MB', 'GB']:
+            if byte_count < 1024.0 and byte_count > -1024.0:
+                return "%3.1f%s" % (byte_count, x)
+            byte_count /= 1024.0
+        return "%3.1f%s" % (byte_count, 'TB')
