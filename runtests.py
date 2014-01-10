@@ -19,6 +19,9 @@ if not settings.configured:
             'remote_fixtures',
         ),
         TEST_RUNNER='django_nose.NoseTestSuiteRunner',
+        AWS_ACCESS_KEY_ID='my access key',
+        AWS_SECRET_ACCESS_KEY='my secret key',
+        REMOTE_FIXTURE_BUCKET='my remote fixture bucket name',
     )
 
 

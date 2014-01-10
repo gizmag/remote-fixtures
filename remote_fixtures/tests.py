@@ -1,6 +1,8 @@
+from mock import patch, Mock
 from django.test import TestCase
+from django.conf import settings
 
-from .utils import humanize_filesize
+from .utils import humanize_filesize, S3Mixin
 
 
 class HumanizeFilesizeTests(TestCase):
@@ -45,3 +47,28 @@ class HumanizeFilesizeTests(TestCase):
             humanize_filesize(549755813888000),
             '500.0TB'
         )
+
+
+class S3MixinTests(TestCase):
+    def setUp(self):
+        self.s3_mixin = S3Mixin()
+
+    def test_get_bucket_uses_cached_bucket_if_exists(self):
+        self.s3_mixin.bucket = 'test test test'
+        result = self.s3_mixin.get_bucket()
+        self.assertEqual(result, 'test test test')
+
+    @patch('remote_fixtures.utils.S3Connection')
+    def test_get_bucket_initialises_s3connection_with_key_and_secret(self, mock_s3connection):
+        self.s3_mixin.get_bucket()
+
+        mock_s3connection.assert_called_once_with(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+
+    @patch('remote_fixtures.utils.S3Connection')
+    def test_bucket_returned_from_get_bucket_and_cached(self, mock_s3connection):
+        mock_s3connection.return_value = Mock(**{
+            'get_bucket.return_value': 'this is my mock bucket'
+        })
+        bucket = self.s3_mixin.get_bucket()
+        self.assertEqual(self.s3_mixin.bucket, 'this is my mock bucket')
+        self.assertEqual(bucket, 'this is my mock bucket')
