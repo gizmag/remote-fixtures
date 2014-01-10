@@ -1,6 +1,8 @@
 Django Remote Fixtures
 ===============
 
+[![Build Status](https://travis-ci.org/gizmag/remote-fixtures.png?branch=master)](https://travis-ci.org/gizmag/remote-fixtures)
+
 This library lets you dump out your current database into the dumpdata .json
 format and upload it to S3 automatically. You're then able to load the data back
 in on the other end.
