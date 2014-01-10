@@ -22,6 +22,10 @@ if not settings.configured:
         AWS_ACCESS_KEY_ID='my access key',
         AWS_SECRET_ACCESS_KEY='my secret key',
         REMOTE_FIXTURE_BUCKET='my remote fixture bucket name',
+        NOSE_ARGS=[
+            '--with-coverage',
+            '--cover-package=remote_fixtures',
+        ]
     )
 
 
