@@ -3,6 +3,9 @@ from django.test import TestCase
 from django.conf import settings
 
 from .utils import humanize_filesize, S3Mixin
+from .management.commands.pull_fixtures import Command as PullFixturesCommand
+from .management.commands.push_fixtures import Command as PushFixturesCommand
+from .management.commands.list_fixtures import Command as ListFixturesCommand
 
 
 class HumanizeFilesizeTests(TestCase):
