@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
+import os
 import dateutil.parser
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from tempfile import NamedTemporaryFile
 
 from remote_fixtures.utils import S3Mixin
@@ -39,6 +41,19 @@ class Command(BaseCommand, S3Mixin):
     def load_fixture(self, fixture_file):
         call_command('loaddata', fixture_file.name)
 
+    def cache_fixture_file(self, fixture_file, filename):
+        base_path = os.getenv('FIXTURE_CACHE_PATH', '~/.fixture_cache')
+        path = '{}/{}'.format(base_path, filename)
+
+        if not os.path.exists(base_path):
+            os.makedirs(base_path)
+
+        with open(path, 'w+') as cache_file:
+            for line in fixture_file:
+                cache_file.write(line)
+
+        fixture_file.seek(0)
+
     def handle(self, *args, **options):
         if len(args) > 0:
             # get fixture from supplied filename
@@ -49,6 +64,10 @@ class Command(BaseCommand, S3Mixin):
 
         # download file
         fixture_file = self.get_file(fixture_key)
+
+        # cache if requested
+        if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
+            self.cache_fixture_file(fixture_file, fixture_key.name)
 
         # load it in
         self.load_fixture(fixture_file)
