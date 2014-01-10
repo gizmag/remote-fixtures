@@ -8,6 +8,10 @@ This library lets you dump out your current database into the dumpdata .json
 format and upload it to S3 automatically. You're then able to load the data back
 in on the other end.
 
+Python 2.7 with Django 1.5+ is supported. If you would like to add support for
+your environment feel free to
+[fork the repository](https://github.com/gizmag/remote-fixtures/fork).
+
 ## Setup
 
 First, install this library with `pip`
