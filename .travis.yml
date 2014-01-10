@@ -6,7 +6,7 @@ env:
     - DJANGO_VERSION=1.5.5
     - DJANGO_VERSION=1.6.1
 install:
-    - pip install -q nose django-nose Django==$DJANGO_VERSION boto==$BOTO_VERSION
+    - pip install -q nose django-nose Django==$DJANGO_VERSION
     - pip install .
 
 script: ./runtests.py
