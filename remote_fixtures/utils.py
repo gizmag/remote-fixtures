@@ -1,6 +1,12 @@
 from boto.s3.connection import S3Connection
 from django.conf import settings
 
+
+class FixtureSource(object):
+    S3 = 's3'
+    CACHE = 'cache'
+
+
 class S3Mixin(object):
     def get_bucket(self):
         if not hasattr(self, 'bucket'):
@@ -8,6 +14,35 @@ class S3Mixin(object):
             self.bucket = conn.get_bucket(settings.REMOTE_FIXTURE_BUCKET)
 
         return self.bucket
+
+    def get_base_cache_path(self):
+        base_path = os.getenv(
+            'FIXTURE_CACHE_PATH',
+            '{}/.remote_fixture_cache'.format(
+                os.getenv('HOME')
+            )
+        )
+
+        if not os.path.exists(base_path):
+            os.makedirs(base_path)
+
+        return base_path
+
+    def get_cache_path(self, filename):
+        return '{}/{}_{}'.format(
+            self.get_base_cache_path(),
+            self.get_bucket().name,
+            filename
+        )
+
+    def cache_fixture_file(self, fixture_file, filename):
+        path = self.get_cache_path(filename)
+
+        with open(path, 'w+') as cache_file:
+            for line in fixture_file:
+                cache_file.write(line)
+
+        fixture_file.seek(0)
 
 
 def humanize_filesize(byte_count):

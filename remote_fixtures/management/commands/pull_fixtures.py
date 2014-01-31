@@ -7,7 +7,7 @@ from django.conf import settings
 from tempfile import NamedTemporaryFile
 from gzip import GzipFile
 
-from remote_fixtures.utils import S3Mixin
+from remote_fixtures.utils import S3Mixin, FixtureSource
 
 
 class Command(BaseCommand, S3Mixin):
@@ -43,30 +43,26 @@ class Command(BaseCommand, S3Mixin):
         return decompressed_file
 
     def get_file(self, key):
-        fixture_file = NamedTemporaryFile(suffix='fixture.json', mode='w+')
-        key.get_contents_to_file(fixture_file)
-        fixture_file.seek(0)
+        fixture_file = None
+        if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
+            path = self.get_cache_path(key.name)
+            if os.path.exists(path):
+                fixture_file = open(path, 'r')
+                source = FixtureSource.CACHE
+
+        if not fixture_file:
+            fixture_file = NamedTemporaryFile(suffix='fixture.json', mode='w+')
+            source = FixtureSource.S3
+            key.get_contents_to_file(fixture_file)
+            fixture_file.seek(0)
 
         if key.name.endswith('.gz'):
-            return self.decompress_file(fixture_file)
+            return (self.decompress_file(fixture_file), source)
         else:
-            return fixture_file
+            return (fixture_file, source)
 
     def load_fixture(self, fixture_file):
         call_command('loaddata', fixture_file.name)
-
-    def cache_fixture_file(self, fixture_file, filename):
-        base_path = os.getenv('FIXTURE_CACHE_PATH', '~/.fixture_cache')
-        path = '{}/{}'.format(base_path, filename)
-
-        if not os.path.exists(base_path):
-            os.makedirs(base_path)
-
-        with open(path, 'w+') as cache_file:
-            for line in fixture_file:
-                cache_file.write(line)
-
-        fixture_file.seek(0)
 
     def handle(self, *args, **options):
         if len(args) > 0:
@@ -77,11 +73,12 @@ class Command(BaseCommand, S3Mixin):
             fixture_key = self.get_latest_fixture_key()
 
         # download file
-        fixture_file = self.get_file(fixture_key)
+        fixture_file, source = self.get_file(fixture_key)
 
         # cache if requested
         if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
-            self.cache_fixture_file(fixture_file, fixture_key.name)
+            if source == FixtureSource.S3:
+                self.cache_fixture_file(fixture_file, fixture_key.name)
 
         # load it in
         self.load_fixture(fixture_file)
