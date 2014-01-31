@@ -7,7 +7,7 @@ from gzip import GzipFile
 from tempfile import NamedTemporaryFile
 from optparse import make_option
 
-
+from remote_fixtures.conf import settings
 from remote_fixtures.utils import S3Mixin
 
 
@@ -51,6 +51,9 @@ class Command(BaseCommand, S3Mixin):
     def handle(self, *args, **options):
         filename = self.get_file_name(options['compress'])
         fixture_file = self.get_fixture_file(args)
+
+        if settings.REMOTE_FIXTURES_ENABLE_CACHE:
+            self.cache_fixture_file(fixture_file, self.remove_gz_suffix(filename))
 
         if options['compress']:
             fixture_file = self.compress_fixture_file(fixture_file)
