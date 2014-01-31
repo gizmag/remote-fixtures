@@ -3,10 +3,10 @@ import os
 import dateutil.parser
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.conf import settings
 from tempfile import NamedTemporaryFile
 from gzip import GzipFile
 
+from remote_fixtures.conf import settings
 from remote_fixtures.utils import S3Mixin, FixtureSource
 
 
@@ -44,7 +44,7 @@ class Command(BaseCommand, S3Mixin):
 
     def get_file(self, key):
         fixture_file = None
-        if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
+        if settings.REMOTE_FIXTURES_ENABLE_CACHE:
             path = self.get_cache_path(self.remove_gz_suffix(key.name))
             if os.path.exists(path):
                 fixture_file = open(path, 'r')
@@ -77,7 +77,7 @@ class Command(BaseCommand, S3Mixin):
         print source
 
         # cache if requested
-        if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
+        if settings.REMOTE_FIXTURES_ENABLE_CACHE:
             if source == FixtureSource.S3:
                 self.cache_fixture_file(fixture_file, self.remove_gz_suffix(fixture_key.name))
 

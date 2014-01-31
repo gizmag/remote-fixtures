@@ -1,6 +1,6 @@
 import os
 from boto.s3.connection import S3Connection
-from django.conf import settings
+from remote_fixtures.conf import settings
 
 
 class FixtureSource(object):
@@ -12,7 +12,7 @@ class S3Mixin(object):
     def get_bucket(self):
         if not hasattr(self, 'bucket'):
             conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            self.bucket = conn.get_bucket(settings.REMOTE_FIXTURE_BUCKET)
+            self.bucket = conn.get_bucket(settings.REMOTE_FIXTURES_BUCKET_NAME)
 
         return self.bucket
 
@@ -23,10 +23,8 @@ class S3Mixin(object):
 
     def get_base_cache_path(self):
         base_path = os.getenv(
-            'FIXTURE_CACHE_PATH',
-            '{}/.remote_fixture_cache'.format(
-                os.getenv('HOME')
-            )
+            'REMOTE_FIXTURES_CACHE_PATH',
+            settings.REMOTE_FIXTURES_BASE_CACHE_PATH
         )
 
         if not os.path.exists(base_path):
