@@ -30,7 +30,8 @@ class Command(BaseCommand, S3Mixin):
     def compress_fixture_file(self, fixture_file):
         compressed_file = NamedTemporaryFile(suffix='.json.gz')
         gzip_file = GzipFile(compresslevel=9, fileobj=compressed_file)
-        gzip_file.write(fixture_file)
+        gzip_file.write(fixture_file.read())
+        gzip_file.close()
         compressed_file.seek(0)
         return compressed_file
 
