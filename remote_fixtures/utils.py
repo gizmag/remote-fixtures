@@ -1,3 +1,4 @@
+import os
 from boto.s3.connection import S3Connection
 from django.conf import settings
 
@@ -14,6 +15,11 @@ class S3Mixin(object):
             self.bucket = conn.get_bucket(settings.REMOTE_FIXTURE_BUCKET)
 
         return self.bucket
+
+    def remove_gz_suffix(self, filename):
+        if filename.endswith('.gz'):
+            return filename[:-3]
+        return filename
 
     def get_base_cache_path(self):
         base_path = os.getenv(

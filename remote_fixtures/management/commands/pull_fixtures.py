@@ -45,7 +45,7 @@ class Command(BaseCommand, S3Mixin):
     def get_file(self, key):
         fixture_file = None
         if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
-            path = self.get_cache_path(key.name)
+            path = self.get_cache_path(self.remove_gz_suffix(key.name))
             if os.path.exists(path):
                 fixture_file = open(path, 'r')
                 source = FixtureSource.CACHE
@@ -56,10 +56,10 @@ class Command(BaseCommand, S3Mixin):
             key.get_contents_to_file(fixture_file)
             fixture_file.seek(0)
 
-        if key.name.endswith('.gz'):
-            return (self.decompress_file(fixture_file), source)
-        else:
-            return (fixture_file, source)
+            if key.name.endswith('.gz'):
+                return (self.decompress_file(fixture_file), source)
+
+        return (fixture_file, source)
 
     def load_fixture(self, fixture_file):
         call_command('loaddata', fixture_file.name)
@@ -74,11 +74,12 @@ class Command(BaseCommand, S3Mixin):
 
         # download file
         fixture_file, source = self.get_file(fixture_key)
+        print source
 
         # cache if requested
         if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
             if source == FixtureSource.S3:
-                self.cache_fixture_file(fixture_file, fixture_key.name)
+                self.cache_fixture_file(fixture_file, self.remove_gz_suffix(fixture_key.name))
 
         # load it in
         self.load_fixture(fixture_file)

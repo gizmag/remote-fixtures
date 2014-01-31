@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from datetime import datetime
+from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
@@ -51,6 +52,9 @@ class Command(BaseCommand, S3Mixin):
     def handle(self, *args, **options):
         filename = self.get_file_name(options['compress'])
         fixture_file = self.get_fixture_file(args)
+
+        if getattr(settings, 'CACHE_REMOTE_FIXTURES', False):
+            self.cache_fixture_file(fixture_file, self.remove_gz_suffix(filename))
 
         if options['compress']:
             fixture_file = self.compress_fixture_file(fixture_file)
