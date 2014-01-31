@@ -14,8 +14,8 @@ from remote_fixtures.utils import S3Mixin
 class Command(BaseCommand, S3Mixin):
     option_list = BaseCommand.option_list + (
         make_option(
-            '--compress',
-            action='store_true',
+            '--nocompress',
+            action='store_false',
             dest='compress',
             default=True,
         ),
