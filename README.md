@@ -33,11 +33,23 @@ And add in your AWS details
 ```python
 AWS_ACCESS_KEY_ID = '...'
 AWS_SECRET_ACCESS_KEY = '...'
-REMOTE_FIXTURE_BUCKET = 'myproject_fixtures'
+REMOTE_FIXTURES_BUCKET = 'myproject_fixtures'
 ```
 
-Note that the `REMOTE_FIXTURE_BUCKET` will need to be manually created through
+Note that the `REMOTE_FIXTURES_BUCKET` will need to be manually created through
 the AWS control panel.
+
+### Cache
+
+Optionally, you can cache generated fixture files on your machine to greatly
+speed up subsequent pulls. The fixture files will however take up disk space.
+
+To configure the cache add to your settings
+
+```python
+REMOTE_FIXTURES_ENABLE_CACHE = True  # default is False
+REMOTE_FIXTURES_BASE_CACHE_PATH = '/my/path/'  # defaults to ~/.remote_fixture_cache
+```
 
 ## Usage
 
