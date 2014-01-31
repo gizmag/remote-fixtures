@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='remote-fixtures',
-    version='0.3.0',
+    version='0.4.0',
     description='Django remote fixture loading',
     author='Gizmag',
     author_email='tech@gizmag.com',
