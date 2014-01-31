@@ -95,3 +95,11 @@ fixture_2013-12-16t100033009137.json   108.6MB   16 Dec 2013  2 weeks, 2 days ag
 fixture_2013-12-23t042152487261.json   129.5KB   23 Dec 2013  1 week, 3 days ago
 fixture_2013-11-30t042815968252.json   129.7KB   23 Dec 2013  1 week, 3 days ago
 ```
+
+### Compression
+
+By default your fixture files will be gzip compressed by `push_fixtures` and
+transparently decompressed by `pull_fixtures`. In my tests I've found a 4-10x
+file size reduction with compression enabled. If you do not wish for your
+fixture files to be compressed, pass the `--nocompress` option to
+`push_fixtures`.
