@@ -5,6 +5,7 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from tempfile import NamedTemporaryFile
+from gzip import GzipFile
 
 from remote_fixtures.utils import S3Mixin
 
@@ -32,11 +33,24 @@ class Command(BaseCommand, S3Mixin):
 
         return key
 
+    def decompress_file(self, gzipped_file):
+        decompressed_file = NamedTemporaryFile(suffix='fixture.json')
+        gzip_file = GzipFile(gzipped_file.name, mode='r')
+
+        decompressed_file.write(gzip_file.read())
+        decompressed_file.seek(0)
+
+        return decompressed_file
+
     def get_file(self, key):
-        fixture_file = NamedTemporaryFile(suffix='fixture.json')
+        fixture_file = NamedTemporaryFile(suffix='fixture.json', mode='w+')
         key.get_contents_to_file(fixture_file)
         fixture_file.seek(0)
-        return fixture_file
+
+        if key.name.endswith('.gz'):
+            return self.decompress_file(fixture_file)
+        else:
+            return fixture_file
 
     def load_fixture(self, fixture_file):
         call_command('loaddata', fixture_file.name)
