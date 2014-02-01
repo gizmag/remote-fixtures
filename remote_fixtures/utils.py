@@ -1,5 +1,10 @@
+from contextlib import contextmanager
+from StringIO import StringIO
 import os
+import sys
+
 from boto.s3.connection import S3Connection
+from django.core.management import call_command
 from remote_fixtures.conf import settings
 
 
@@ -61,3 +66,28 @@ def humanize_filesize(byte_count):
                 return "%3.1f%s" % (byte_count, x)
             byte_count /= 1024.0
         return "%3.1f%s" % (byte_count, 'TB')
+
+
+class CaptureData(object):
+    pass
+
+
+@contextmanager
+def capture_stdout():
+    old = sys.stdout
+    capturer = StringIO()
+    sys.stdout = capturer
+    data = CaptureData()
+    yield data
+    sys.stdout = old
+    data.result = capturer.getvalue()
+
+
+def get_db_hash():
+    with capture_stdout() as sql_statements:
+        for app_label in settings.INSTALLED_APPS:
+            try:
+                call_command('sql', app_label)
+            except:
+                pass
+    return sha1(sql_statements.result).hexdigest()
