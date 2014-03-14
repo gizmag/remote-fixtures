@@ -19,7 +19,7 @@ class Command(BaseCommand, S3Mixin):
 
         for fixture in fixtures:
             print columns(
-                [fixture.name, 41],
+                [fixture.name, 44],
                 [humanize_filesize(fixture.size), 9],
                 [fixture.last_modified_dt.strftime('%d %b %G'), 12],
                 [naturaltime(fixture.last_modified_dt), 25],
